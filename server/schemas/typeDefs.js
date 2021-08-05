@@ -35,7 +35,7 @@ const typeDefs = gql`
     link: String
   }
 
-  # Input type to handle parameters for mutation
+  # Input type to handle parameters for book mutation
   input BookInfo {
     bookId: String!
     authors: [String]
