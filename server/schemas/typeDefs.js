@@ -8,8 +8,15 @@ const typeDefs = gql`
     _id: ID
     username: String
     email: String
+    password: String
     bookCount: Int
     savedBooks: [Book]
+  }
+
+  # Define Auth fields
+  type Auth {
+    token: ID!
+    user: User
   }
 
   # Define Book model fields
@@ -30,12 +37,6 @@ const typeDefs = gql`
     title: String
     image: String
     link: String
-  }
-
-  # Define Auth fields
-  type Auth {
-    token: ID!
-    user: User
   }
 
   # Define Query type
