@@ -35,8 +35,8 @@ const resolvers = {
       if (!user) {
         throw new AuthenticationError("Please enter correct credentials");
       }
-      const isCorrectPwd = await user.isCorrectPassword(password);
-      if (!isCorrectPwd) {
+      const correctPwd = await user.isCorrectPassword(password);
+      if (!correctPwd) {
         throw new AuthenticationError("Please enter correct credentials");
       }
       const token = signToken(user);
