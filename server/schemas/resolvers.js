@@ -9,8 +9,9 @@ const resolvers = {
     // apollographql doc resolver function
     me: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({_id: context.user._id})
-        .select('-__v -password');
+        const userData = await User.findOne({ _id: context.user._id }).select(
+          "-__v -password"
+        );
 
         return userData;
       }
@@ -19,6 +20,13 @@ const resolvers = {
   },
 
   Mutation: {
+    // New user creation
+    addUser: async (parent, args) => {
+      const user = await User.create(args);
+      const token = signToken(user);
+      return { token, user };
+    },
+
     // User logging in
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
@@ -35,15 +43,8 @@ const resolvers = {
       return { token, user };
     },
 
-    // New user creation
-    addUser: async (parent, args) => {
-      const user = await User.create(args);
-      const token = signToken(user);
-      return { token, user };
-    },
-
     // Save book
-    saveBook: async (parent, { input }, {user}) => {
+    saveBook: async (parent, { input }, { user }) => {
       if (user) {
         const updatedUser = await User.findByIdAndUpdate(
           { _id: user._id },
@@ -56,12 +57,12 @@ const resolvers = {
     },
 
     // Remove book
-    removeBook: async (parent, { bookId }, {user}) => {
+    removeBook: async (parent, { bookId }, { user }) => {
       if (user) {
         const updatedUser = await User.findOneAndUpdate(
           { _id: user._id },
           { $pull: { savedBooks: { bookId: bookId } } },
-          { new: true }
+          { new: true, runValidators: true }
         );
         return updatedUser;
       }
