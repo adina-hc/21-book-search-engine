@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/react-hooks';
 import { LOGIN_USER } from '../utils/mutations';
 
 import Auth from '../utils/auth';
@@ -13,7 +13,7 @@ const LoginForm = () => {
   const [showAlert, setShowAlert] = useState(false);
 
   // Adding the mutation
-  const [login, { error }] = useMutation(LOGIN_USER);
+  const [loginUser, { error }] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -32,12 +32,14 @@ const LoginForm = () => {
     
     // replaced old code
     try {
-      const { data } = await login({
+      const { data } = await loginUser({
         variables: { ...userFormData}
       })
-      console.log(data);
+      // Bringing data from user to JWS auth
       Auth.login(data.login.token);
+
       console.log(error);
+
     } catch (error) {
       console.log(error);
       setShowAlert(true);

@@ -9,19 +9,19 @@ import {
 import Auth from "../utils/auth";
 import { removeBookId } from "../utils/localStorage";
 // Using queries/mutations
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/client";
 import { GET_ME } from "../utils/queries";
 import { REMOVE_BOOK} from "../utils/mutations";
 
 const SavedBooks = () => {
-  //Execute query on load, save to userData variable
+  // Execute query on load, save to userData
   const { loading, data } = useQuery(GET_ME);
+  // Use mutation to remove book
+  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
 
   const userData = data?.me || {};
-
-  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+ 
   
-
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -59,14 +59,13 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {userData.SavedBooks.length
-            ? `Viewing ${userData.savedBooks.length} saved ${
+          {userData.savedBooks?.length ? `Viewing ${userData.savedBooks.length} saved ${
                 userData.savedBooks.length === 1 ? "book" : "books"
               }:`
             : "You have no saved books!"}
         </h2>
         <CardColumns>
-          {userData.savedBooks.map((book) => {
+          {userData.savedBooks?.map((book) => {
             return (
               <Card key={book.bookId} border="dark">
                 {book.image ? (

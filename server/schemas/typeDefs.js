@@ -3,12 +3,22 @@ const { gql } = require("apollo-server-express");
 
 //Define types, queries and mutations
 const typeDefs = gql`
+  # Define Book model fields
+  type Book {
+    _id: ID!
+    bookId: String
+    authors: [String]
+    description: String
+    title: String
+    image: String
+    link: String
+  }
+
   # Define User model fields
   type User {
-    _id: ID
+    _id: ID!
     username: String
     email: String
-    password: String
     bookCount: Int
     savedBooks: [Book]
   }
@@ -19,36 +29,26 @@ const typeDefs = gql`
     user: User
   }
 
-  # Define Book model fields
-  type Book {
-    bookId: String
-    authors: [String]
-    description: String
-    title: String
-    image: String
-    link: String
-  }
-
-  # Input type to handle parameters for book mutation
-  input bookInfo {
-    bookId: String
-    authors: [String]
-    description: String
-    title: String
-    image: String
-    link: String
-  }
-
   # Define Query type
   type Query {
     me: User
+  }
+
+  # Input type to handle parameters for book mutation
+  input BookInfo {
+    bookId: String
+    authors: [String]
+    description: String!
+    title: String!
+    image: String
+    link: String
   }
 
   # Define Mutation type
   type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
-    saveBook(input: bookInfo!): User
+    saveBook(bookData: BookInfo!): User
     removeBook(bookId: ID!): User
   }
 `;

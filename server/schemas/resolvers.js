@@ -1,6 +1,6 @@
 // Imports
 const { AuthenticationError } = require("apollo-server-express");
-const { User } = require("../models");
+const { User, Book } = require("../models");
 const { signToken } = require("../utils/auth");
 
 // Create the functions that fulfill the queries defined in `typeDefs.js`
@@ -9,10 +9,9 @@ const resolvers = {
     // apollographql doc resolver function
     me: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id }).select(
-          "-__v -password"
-        );
-
+        const userData = await User.findOne({})
+        .select("-__v -password")
+        .populate('books')
         return userData;
       }
       throw new AuthenticationError("Sorry, you are not logged in");
@@ -44,12 +43,12 @@ const resolvers = {
     },
 
     // Save book
-    saveBook: async (parent, { input }, { user }) => {
-      if (user) {
+    saveBook: async (parent, { bookData }, context) => {
+      if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
-          { _id: user._id },
-          { $addToSet: { savedBooks: input } },
-          { new: true, runValidators: true }
+          { _id: context.user._id },
+          { $addToSet: { savedBooks: bookData } },
+          { new: true }
         );
         return updatedUser;
       }
@@ -57,12 +56,12 @@ const resolvers = {
     },
 
     // Remove book
-    removeBook: async (parent, { bookId }, { user }) => {
-      if (user) {
+    removeBook: async (parent, args, context) => {
+      if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
-          { _id: user._id },
-          { $pull: { savedBooks: { bookId: bookId } } },
-          { new: true, runValidators: true }
+          { _id: context.user._id },
+          { $pull: { savedBooks: { bookId: args.bookId } } },
+          { new: true }
         );
         return updatedUser;
       }

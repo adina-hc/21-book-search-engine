@@ -1,5 +1,5 @@
 {
-  "name": "book-search-ap",
+  "name": "googlebooks-app",
   "version": "1.0.0",
   "description": "",
   "engines": {
@@ -12,13 +12,14 @@
     "local:prod": "cd server && npm start",
     "local:dev": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
-    "install": "cd server && npm i && cd ../client && npm i",
     "build": "cd client && npm run build",
+    "install": "cd server && npm i && cd ../client && npm i",
     "heroku-postbuild": "cd client && npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {"if-env":"1.0.4"},
   "devDependencies": {
     "concurrently": "^5.1.0"
   }
