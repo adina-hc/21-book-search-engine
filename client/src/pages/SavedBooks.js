@@ -11,7 +11,7 @@ import { removeBookId } from "../utils/localStorage";
 // Using queries/mutations
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { GET_ME } from "../utils/queries";
-import { REMOVE_BOOK } from "../utils/mutations";
+import { REMOVE_BOOK} from "../utils/mutations";
 
 const SavedBooks = () => {
   //Execute query on load, save to userData variable
@@ -20,6 +20,7 @@ const SavedBooks = () => {
   const userData = data?.me || {};
 
   const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+  
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -58,7 +59,7 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {userData.savedBooks.length
+          {userData.SavedBooks.length
             ? `Viewing ${userData.savedBooks.length} saved ${
                 userData.savedBooks.length === 1 ? "book" : "books"
               }:`
