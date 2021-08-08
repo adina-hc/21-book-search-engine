@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const secret = "mysecretsshhhhh";
 const expiration = "2h";
 
+
 module.exports = {
   // function for our authenticated routes
   authMiddleware: function ({ req }) {
@@ -26,6 +27,7 @@ module.exports = {
       req.user = data;
     } catch {
       console.log("Invalid token");
+      return resizeBy.status(400).json({ message: 'the token is invalid' });
     }
 
     // return updated request
