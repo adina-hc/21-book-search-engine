@@ -10,7 +10,16 @@ You can find a walk through video of the functioning App in the following link:
 [GoogleDrive](https://drive.google.com/file/d/1FRg6FUbPF9UJ5GTtObxeTcHxiB4XBNPA/view)
 
 Generated gif:
+<br>
+
 ![Gif animation](./Assets/book-search.gif)
+<br>
+
+Running locally with npm run develop:
+
+![Gif animation running locally npm run develop](./Assets/book-search-app.gif)
+<br>
+
 
 ## Table of Contents
 
