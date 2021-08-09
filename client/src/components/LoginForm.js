@@ -33,12 +33,12 @@ const LoginForm = () => {
     // replaced old code
     try {
       const { data } = await loginUser({
-        variables: { ...userFormData}
-      })
+        variables: { ...userFormData},
+      });
+      console.log(data);
+      console.log("error on login:", error)
       // Bringing data from user to JWS auth
       Auth.login(data.login.token);
-
-      console.log(error);
 
     } catch (error) {
       console.log(error);

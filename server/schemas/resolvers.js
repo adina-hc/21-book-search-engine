@@ -1,6 +1,6 @@
 // Imports
 const { AuthenticationError } = require("apollo-server-express");
-const { User, Book } = require("../models");
+const { User } = require("../models");
 const { signToken } = require("../utils/auth");
 
 // Create the functions that fulfill the queries defined in `typeDefs.js`
@@ -9,7 +9,7 @@ const resolvers = {
     // apollographql doc resolver function
     me: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({})
+        const userData = await User.findOne({ _id: context.user._id })
         .select("-__v -password")
         .populate('books')
         return userData;
@@ -20,8 +20,8 @@ const resolvers = {
 
   Mutation: {
     // New user creation
-    addUser: async (parent, args) => {
-      const user = await User.create(args);
+    addUser: async (parent, {username, email, password}) => {
+      const user = await User.create({ username, email, password });
       const token = signToken(user);
       return { token, user };
     },
@@ -34,8 +34,8 @@ const resolvers = {
       if (!user) {
         throw new AuthenticationError("Please enter correct credentials");
       }
-      const correctPwd = await user.isCorrectPassword(password);
-      if (!correctPwd) {
+      const correctPw = await user.isCorrectPassword(password);
+      if (!correctPw) {
         throw new AuthenticationError("Please enter correct credentials");
       }
       const token = signToken(user);
@@ -43,12 +43,15 @@ const resolvers = {
     },
 
     // Save book
-    saveBook: async (parent, { bookData }, context) => {
+    saveBook: async (parent, { input }, context) => {
+      console.log(context);
+      console.log(bookInfo);
+      
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { savedBooks: bookData } },
-          { new: true }
+          { $addToSet: { savedBooks: input } },
+          { new: true, runValidations: true }
         );
         return updatedUser;
       }
@@ -56,12 +59,12 @@ const resolvers = {
     },
 
     // Remove book
-    removeBook: async (parent, args, context) => {
+    removeBook: async (parent, {bookId}, context) => {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $pull: { savedBooks: { bookId: args.bookId } } },
-          { new: true }
+          { $pull: { savedBooks: { bookId: bookId } } },
+          { new: true, runValidations: true }
         );
         return updatedUser;
       }
