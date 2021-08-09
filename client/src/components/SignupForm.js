@@ -33,15 +33,17 @@ const SignupForm = () => {
       event.stopPropagation();
     }
 
-    // Replaced old code with the following
+    // Replaced old code with the following to implement add user
     try {
       const { data } = await addUser({
         variables: { ...userFormData },
       });
-      console.log(error);
+      if(error) {
+        throw new Error('something is wrong');
+      }
       Auth.login(data.addUser.token);
     } catch (error) {
-      console.error(error);
+      console.error("something is wrong",  error);
       setShowAlert(true);
     }
 

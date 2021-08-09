@@ -6,7 +6,7 @@ import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 
 // Added Import mutation and useMutation
 import { SAVE_BOOK } from "../utils/mutations";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/react-hooks";
 
 const SearchBooks = () => {
   // Adding mutation to save book

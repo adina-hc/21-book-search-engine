@@ -13,7 +13,7 @@ const LoginForm = () => {
   const [showAlert, setShowAlert] = useState(false);
 
   // Adding the mutation
-  const [loginUser, { error }] = useMutation(LOGIN_USER);
+  const [login, { error }] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -32,9 +32,12 @@ const LoginForm = () => {
     
     // replaced old code
     try {
-      const { data } = await loginUser({
+      const { data } = await login({
         variables: { ...userFormData},
       });
+      if (error) {
+        throw new Error ('there was an error while loggin in');
+      }
       console.log(data);
       console.log("error on login:", error)
       // Bringing data from user to JWS auth

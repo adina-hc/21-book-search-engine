@@ -9,24 +9,25 @@ import {
 import Auth from "../utils/auth";
 import { removeBookId } from "../utils/localStorage";
 // Using queries/mutations
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import { GET_ME } from "../utils/queries";
 import { REMOVE_BOOK} from "../utils/mutations";
 
 const SavedBooks = () => {
   // Execute query on load, save to userData
   const { loading, data } = useQuery(GET_ME);
-  // Use mutation to remove book
-  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
 
   const userData = data?.me || {};
- 
+
+  // Use mutation to remove book
+  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
   
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
+      console.log("Something weird with the token");
       return false;
     }
 
@@ -59,7 +60,8 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {userData.savedBooks?.length ? `Viewing ${userData.savedBooks.length} saved ${
+          {userData.savedBooks?.length
+            ? `Viewing ${userData.savedBooks.length} saved ${
                 userData.savedBooks.length === 1 ? "book" : "books"
               }:`
             : "You have no saved books!"}

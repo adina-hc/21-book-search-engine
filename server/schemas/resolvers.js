@@ -9,9 +9,9 @@ const resolvers = {
     // apollographql doc resolver function
     me: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id })
+        const userData = await User.findOne({ _id: context.user._id})
         .select("-__v -password")
-        .populate('books')
+
         return userData;
       }
       throw new AuthenticationError("Sorry, you are not logged in");
@@ -20,9 +20,11 @@ const resolvers = {
 
   Mutation: {
     // New user creation
-    addUser: async (parent, {username, email, password}) => {
-      const user = await User.create({ username, email, password });
+    addUser: async (parent, args) => {
+      const user = await User.create(args);
       const token = signToken(user);
+
+      console.log("token: ", token)
       return { token, user };
     },
 
@@ -43,13 +45,11 @@ const resolvers = {
     },
 
     // Save book
-    saveBook: async (parent, { input }, context) => {
-      console.log(context);
-      console.log(bookInfo);
+    saveBook: async (parent, { input }, {user}) => {
       
-      if (context.user) {
+      if (user) {
         const updatedUser = await User.findByIdAndUpdate(
-          { _id: context.user._id },
+          { _id: user._id },
           { $addToSet: { savedBooks: input } },
           { new: true, runValidations: true }
         );
@@ -59,10 +59,10 @@ const resolvers = {
     },
 
     // Remove book
-    removeBook: async (parent, {bookId}, context) => {
-      if (context.user) {
+    removeBook: async (parent, {bookId}, {user}) => {
+      if (user) {
         const updatedUser = await User.findOneAndUpdate(
-          { _id: context.user._id },
+          { _id: user._id },
           { $pull: { savedBooks: { bookId: bookId } } },
           { new: true, runValidations: true }
         );
