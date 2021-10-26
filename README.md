@@ -43,7 +43,7 @@ Questions
 - GraphQL
 
 ## Links to the App
-[GitHub Repo](https://github.com/adina-hc/21-book-search-engine)
+[GitHub Repo](https://github.com/adina-hc/book-search-engine)
 
 <br>
 
